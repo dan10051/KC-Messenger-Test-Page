@@ -3,7 +3,7 @@ pipelines:
   branches:
     experimental:               # Exp kctest.kcexp.pro/messenger deploy
       - step:
-         name: Deploy kctest.kcexp.pro/messenger to AWS Exp environment
+         name: Deploy test.exp.pro/messenger to AWS Exp environment
          script:
 
            - pipe: atlassian/rsync-deploy:0.4.4
