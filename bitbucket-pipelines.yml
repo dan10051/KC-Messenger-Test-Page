@@ -1,0 +1,15 @@
+pipelines:
+
+  branches:
+    experimental:               # Exp kctest.kcexp.pro/messenger deploy
+      - step:
+         name: Deploy kctest.kcexp.pro/messenger to AWS Exp environment
+         script:
+
+           - pipe: atlassian/rsync-deploy:0.4.4
+             variables:
+               USER: '$DEPLOY_USER'
+               SERVER: '$DEPLOY_SERVER_EXP'
+               REMOTE_PATH: '$DEPLOY_REMOTE_PATH_EXP'
+               LOCAL_PATH: '${BITBUCKET_CLONE_DIR}/'
+               EXTRA_ARGS: '--exclude-from=.gitignore'
