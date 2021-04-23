@@ -1,0 +1,25 @@
+pipelines:
+
+  branches:
+    experimental:               # Exp msg.kcexp.pro deploy
+      - step:
+         name: Deploy msg.exp.pro to AWS Exp environment
+         script:
+           - cp config/override.ini.example config/override.ini
+           - sed -i "s/dbName        = ''/dbName        = '$dbName'/" config/override.ini
+           - sed -i "s/dbHost        = '127.0.0.1'/dbHost        = '$dbHost'/" config/override.ini
+           - sed -i "s/dbPort        = ''/dbPort        = '3306'/" config/override.ini
+           - sed -i "s/dbUser        = ''/dbUser        = '$dbUser'/" config/override.ini
+           - sed -i "s/dbPassword    = ''/dbPassword    = '$dbPassword'/" config/override.ini
+           - sed -i "s/enableSSL     = false/enableSSL     = true/" config/override.ini
+           - sed -i "s/.\/config\/devServer.pem/\/etc\/letsencrypt\/live\/msg.kcexp.pro\/fullchain.pem/" config/override.ini
+           - sed -i "s/.\/config\/devServer.key/\/etc\/letsencrypt\/live\/msg.kcexp.pro\/privkey.pem/" config/override.ini
+
+
+           - pipe: atlassian/rsync-deploy:0.4.4
+             variables:
+               USER: '$DEPLOY_USER'
+               SERVER: '$DEPLOY_SERVER_EXP'
+               REMOTE_PATH: '$DEPLOY_REMOTE_PATH_EXP'
+               LOCAL_PATH: '${BITBUCKET_CLONE_DIR}/'
+               EXTRA_ARGS: '--exclude-from=.gitignore'
